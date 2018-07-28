@@ -125,7 +125,7 @@ private:
     int       Axd, Ayd, Axa, Azdm1;
     double    a, a2;
     double    h, hin, h2in;
-    bool      ssd;
+    bool      use_ssd;
     int       numThreads;
     nlThread *threads;
     std::mutex mtx;

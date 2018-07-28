@@ -23,10 +23,10 @@
 **   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#include <cstdlib>
+
 #include "VapourSynth.h"
 #include "TNLMeans.h"
-
-#include <cstdlib>
 
 TNLMeans::TNLMeans
 (
@@ -41,7 +41,7 @@ TNLMeans::TNLMeans
 ) : Ax( _Ax ), Ay( _Ay ), Az( _Az ),
     Sx( _Sx ), Sy( _Sy ),
     Bx( _Bx ), By( _By ),
-    a( _a ), h( _h ), ssd( _ssd )
+    a( _a ), h( _h ), use_ssd( _ssd )
 {
     node =  vsapi->propGetNode( in, "clip", 0, 0 );
     vi   = *vsapi->getVideoInfo( node );
@@ -239,14 +239,14 @@ VSFrameRef *TNLMeans::GetFrame
 
     if( peak <= 255 )
     {
-        if( ssd )
+        if( use_ssd )
             GetFrameByMethod< 1, uint8_t >( n, thread.GetId(), peak, dst, frame_ctx, core, vsapi );
         else
             GetFrameByMethod< 0, uint8_t >( n, thread.GetId(), peak, dst, frame_ctx, core, vsapi );
     }
     else
     {
-        if( ssd )
+        if( use_ssd )
             GetFrameByMethod< 1, uint16_t >( n, thread.GetId(), peak, dst, frame_ctx, core, vsapi );
         else
             GetFrameByMethod< 0, uint16_t >( n, thread.GetId(), peak, dst, frame_ctx, core, vsapi );
