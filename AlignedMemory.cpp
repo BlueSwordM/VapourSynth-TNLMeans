@@ -22,6 +22,8 @@
 #include <cassert>
 #include <cstdlib>
 
+using std::ptrdiff_t;
+
 namespace AlignedMemory
 {
     void *alloc( size_t size, size_t alignment )

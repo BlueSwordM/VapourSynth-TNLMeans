@@ -30,7 +30,7 @@ class AlignedArrayObject
 private:
     T *x;
 public:
-    using bad_alloc = class : std::bad_alloc { using std::bad_alloc::bad_alloc; };
+    using bad_alloc = class bad_alloc: std::bad_alloc { using std::bad_alloc::bad_alloc; };
     AlignedArrayObject() { x = nullptr; }
     template < typename U >
     AlignedArrayObject( U n )
