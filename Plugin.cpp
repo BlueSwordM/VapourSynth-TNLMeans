@@ -20,19 +20,20 @@
 
 #include "config.h"
 #include "VapourSynth.h"
+#include "VSHelper.h"
 #include "TNLMeans.h"
 
-static inline void set_option_int64
+static inline void set_option_int
 (
-    int64_t     *opt,
-    int64_t      default_value,
+    int         *opt,
+    int          default_value,
     const char  *arg,
     const VSMap *in,
     const VSAPI *vsapi
 )
 {
     int e;
-    *opt = vsapi->propGetInt( in, arg, 0, &e );
+    *opt = int64ToIntS( vsapi->propGetInt( in, arg, 0, &e ) );
     if( e )
         *opt = default_value;
 }
@@ -88,9 +89,9 @@ static const VSFrameRef * VS_CC getFrameTNLMeans
     }
     catch( std::bad_alloc &e )
     {
-        char errMessage[256];
-        sprintf( errMessage, "TNLMeans:  %s", e.what() );
-        vsapi->setFilterError( errMessage, frame_ctx );
+        std::string errMessage = "TNLMeans:  ";
+        errMessage += e.what();
+        vsapi->setFilterError( errMessage.c_str(), frame_ctx );
     }
 
     return nullptr;
@@ -117,26 +118,26 @@ static void VS_CC createTNLMeans
     const VSAPI *vsapi
 )
 {
-    int64_t ax;
-    int64_t ay;
-    int64_t az;
-    int64_t sx;
-    int64_t sy;
-    int64_t bx;
-    int64_t by;
+    int     ax;
+    int     ay;
+    int     az;
+    int     sx;
+    int     sy;
+    int     bx;
+    int     by;
     double  a;
     double  h;
-    int64_t ssd;
-    set_option_int64 ( &ax,    4, "ax",  in, vsapi );
-    set_option_int64 ( &ay,    4, "ay",  in, vsapi );
-    set_option_int64 ( &az,    0, "az",  in, vsapi );
-    set_option_int64 ( &sx,    2, "sx",  in, vsapi );
-    set_option_int64 ( &sy,    2, "sy",  in, vsapi );
-    set_option_int64 ( &bx,    1, "bx",  in, vsapi );
-    set_option_int64 ( &by,    1, "by",  in, vsapi );
+    int     ssd;
+    set_option_int   ( &ax,    4, "ax",  in, vsapi );
+    set_option_int   ( &ay,    4, "ay",  in, vsapi );
+    set_option_int   ( &az,    0, "az",  in, vsapi );
+    set_option_int   ( &sx,    2, "sx",  in, vsapi );
+    set_option_int   ( &sy,    2, "sy",  in, vsapi );
+    set_option_int   ( &bx,    1, "bx",  in, vsapi );
+    set_option_int   ( &by,    1, "by",  in, vsapi );
     set_option_double( &a,   1.0, "a",   in, vsapi );
     set_option_double( &h,   0.5, "h",   in, vsapi );
-    set_option_int64 ( &ssd,   1, "ssd", in, vsapi );
+    set_option_int   ( &ssd,   1, "ssd", in, vsapi );
 
     try
     {
@@ -161,16 +162,18 @@ static void VS_CC createTNLMeans
     }
     catch( TNLMeans::bad_param &e )
     {
-        char errMessage[256];
-        sprintf( errMessage, "TNLMeans:  %s!", e.what() );
-        vsapi->setError( out, errMessage );
+        std::string errMessage = "TNLMeans:  ";
+        errMessage += e.what();
+        errMessage += "!";
+        vsapi->setError( out, errMessage.c_str() );
         return;
     }
     catch( TNLMeans::bad_alloc &e )
     {
-        char errMessage[256];
-        sprintf( errMessage, "TNLMeans:  allocation failure (%s)!", e.what() );
-        vsapi->setError( out, errMessage );
+        std::string errMessage = "TNLMeans:  allocation failure (";
+        errMessage += e.what();
+        errMessage += ")!";
+        vsapi->setError( out, errMessage.c_str() );
         return;
     }
     catch( ... )
