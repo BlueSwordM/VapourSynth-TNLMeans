@@ -1,0 +1,2 @@
+#define VSTNLMEANS_REV ""
+#define VSTNLMEANS_GIT_HASH "@VCS_TAG@"
