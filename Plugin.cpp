@@ -19,8 +19,8 @@
  *****************************************************************************/
 
 #include "config.h"
-#include "VapourSynth.h"
-#include "VSHelper.h"
+#include "/usr/local/include/vapoursynth/VapourSynth.h"
+#include "/usr/local/include/vapoursynth/VSHelper.h"
 #include "TNLMeans.h"
 
 static inline void set_option_int
